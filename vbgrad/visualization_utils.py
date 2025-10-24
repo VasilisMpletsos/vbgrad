@@ -23,7 +23,7 @@ def draw_graph(root_node):
         uuid = str(id(node))
         graph.node(
             name=uuid,
-            label=f"{node.variable_name} | Parameter {node.value:.4f}",
+            label=f"{node.variable_name} | Parameter {node.value:.4f} | Gradient {node.grad:.4f}",
             shape="box",
         )
 
