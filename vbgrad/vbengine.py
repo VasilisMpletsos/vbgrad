@@ -23,12 +23,21 @@ class Parameter:
         out = Parameter(self.value + other.value, {self, other}, "+")
 
         def _backward():
-            self.grad = 1 * out.grad
-            other.grad = 1 * out.grad
+            self.grad += 1 * out.grad
+            other.grad += 1 * out.grad
 
         out._backward = _backward
 
         return out
+
+    def __neg__(self):
+        return self * -1
+
+    def __sub__(self, other):
+        return self + (-other)
+
+    def __radd__(self, other):
+        return self + other
 
     def __mul__(self, other):
         if not isinstance(other, Parameter):
@@ -37,12 +46,39 @@ class Parameter:
         out = Parameter(self.value * other.value, {self, other}, "*")
 
         def _backward():
-            self.grad = other.value * out.grad
-            other.grad = self.value * out.grad
+            self.grad += other.value * out.grad
+            other.grad += self.value * out.grad
 
         out._backward = _backward
 
         return out
+
+    def __rmul__(self, other):
+        return self * other
+
+    def __pow__(self, other):
+        if not isinstance(other, (int, float)):
+            raise ValueError("Power must be Integer or Float")
+
+        power_value = self.value**other
+        out = Parameter(
+            power_value,
+            {
+                self,
+            },
+            "power",
+            variable_name="power",
+        )
+
+        def _backward():
+            self.grad += (other * (self.value ** (other - 1))) * self.grad
+
+        out._backward = _backward
+
+        return out
+
+    def __truediv__(self, other):
+        return self * (other**-1)
 
     def tanh(self):
         value = self.value
@@ -57,7 +93,25 @@ class Parameter:
         )
 
         def _backward():
-            self.grad = (1 - tanh**2) * out.grad
+            self.grad += (1 - tanh**2) * out.grad
+
+        out._backward = _backward
+
+        return out
+
+    def exp(self):
+        value = self.value
+        out = Parameter(
+            exp(value),
+            {
+                self,
+            },
+            "exp",
+            variable_name="exp",
+        )
+
+        def _backward():
+            self.grad += out.value * out.grad
 
         out._backward = _backward
 
