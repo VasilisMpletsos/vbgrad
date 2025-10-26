@@ -19,6 +19,9 @@ class Neuron:
         summation = sum([self.w[i] * x[i] for i in range(len(x))])
         return summation + self.b
 
+    def get_parameters(self):
+        return self.w + [self.b]
+
     def __repr__(self):
         return f"Neuron | {len(self.w)} inputs"
 
@@ -30,6 +33,13 @@ class Layer:
     def __call__(self, x):
         outputs = [neuron(x) for neuron in self.neurons]
         return outputs[0] if len(outputs) == 1 else outputs
+
+    def get_parameters(self):
+        params = []
+        for neuron in self.neurons:
+            neuron_params = neuron.get_parameters()
+            params.extend(neuron_params)
+        return params
 
     def __repr__(self):
         return f"Layer | {len(self.neurons)} neurons"
@@ -48,7 +58,15 @@ class NeuralNetwork:
         # Pass through all layers
         for layer in self.layers:
             x = layer(x)
-        return x
+
+        return x.tanh()
+
+    def get_parameters(self):
+        params = []
+        for layer in self.layers:
+            layer_params = layer.get_parameters()
+            params.extend(layer_params)
+        return params
 
     def __repr__(self):
         return f"Layer | {len(self.neurons)} neurons"

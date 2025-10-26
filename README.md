@@ -15,3 +15,5 @@ This project follows Andrej Karpathy’s tutorial ([Youtube Link](https://youtu.
 Although automatic differentiation is one of the most fundamental aspects of neural networks and the building stone of optimization processes, many engineers, including myself, lack a deep understanding of what actually happens at lower levels.
 
 I found this lecture extremely valuable, so I decided to follow it closely and build my own automatic differentiation engine to gain a deeper, hands-on understanding of how the "universe" works.
+
+![MLP Graph](./.assets/graph.png)

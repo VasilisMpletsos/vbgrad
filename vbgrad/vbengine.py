@@ -36,6 +36,9 @@ class Parameter:
     def __sub__(self, other):
         return self + (-other)
 
+    def __rsub__(self, other):
+        return other + (-self)
+
     def __radd__(self, other):
         return self + other
 
@@ -71,7 +74,7 @@ class Parameter:
         )
 
         def _backward():
-            self.grad += (other * (self.value ** (other - 1))) * self.grad
+            self.grad += (other * (self.value ** (other - 1))) * out.grad
 
         out._backward = _backward
 
@@ -79,6 +82,9 @@ class Parameter:
 
     def __truediv__(self, other):
         return self * (other**-1)
+
+    def __rtruediv__(self, other):
+        return other * self**-1
 
     def tanh(self):
         value = self.value
